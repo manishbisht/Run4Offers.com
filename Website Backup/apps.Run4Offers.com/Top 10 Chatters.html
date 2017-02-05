@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome to Apps.Run4Offers.com| Facebook ID Card | Designed by Manish Bisht</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/design.css" rel="stylesheet">
+<link rel="icon" 
+      type="image/png"
+      href="images/logo.png"
+      sizes="32x32">
+</head>
+<script>
+function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    if (response.status === 'connected') {
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
+    } else {
+      document.getElementById('status').innerHTML = 'Please log ' + 'into Facebook.';
+    }
+  }
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '395790793915453',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.3' // use version 2.2
+  });
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  };
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  function testAPI() {
+console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + ' !!';
+	  document.getElementById('sample').style.display="none";
+	  document.getElementById('real').style.display="block";
+	  document.getElementById('Login').style.display="none";
+    });
+   
+}
+
+</script>
+<body>
+<div class="container" align="center" style="padding:0">
+   <img src="images/header.png" class="img-responsive" alt="Manish Bisht">
+</div>
+
+<div class="container" style="padding:0">
+   <div class="col-md-8" style="padding:0;margin-bottom:20px" align="center" id="sample">
+       <img src="images/sampleid.png" class="img-responsive">
+   </div>
+   <div class="col-md-8" style="padding:0;margin-bottom:20px;display:none" id="real">
+      <div id="f1">
+      </div>
+   </div>
+   <div class="col-md-4" align="center">
+      <div id="Login">
+      <fb:login-button scope="public_profile,user_birthday,user_photos" onlogin="checkLoginState();">
+      </fb:login-button>
+      </div>
+      <div id="status">
+      </div>
+   </div>
+</div>
+<div id="res">
+</div>
+<img id="result">
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.plugin.html2canvas.js"></script>
+<script src="js/html2canvas.js"></script>
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
