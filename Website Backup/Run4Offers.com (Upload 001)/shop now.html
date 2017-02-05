@@ -1,0 +1,130 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Shop Now | Login to Continue</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/header.css" rel="stylesheet">
+<link href="css/shopnow.css" rel="stylesheet">
+<link rel="icon" 
+      type="image/png"
+      href="images/logo.png"
+      sizes="32x32">
+</head>
+
+<body"> 
+<script type="text/javascript">
+var flipkartlink="http://dl.flipkart.com/dl/?affid=bestshopp";
+var amazonlink="http://www.amazon.in/ref=as_li_ss_tl?_encoding=UTF8&camp=3626&creative=24822&linkCode=ur2&tag=shoppinghub-21";
+var snapdeallink="http://www.snapdeal.com?utm_source=aff_prog&utm_campaign=afts&offer_id=17&aff_id=27286";
+function userlogin(){
+	var x=document.cookie;
+	if(x==""){
+	document.cookie="Guest";
+    document.getElementById('user').innerHTML="Guest";
+	document.getElementById('usernumber').innerHTML="Guest";
+	document.getElementById('flipkart').href=flipkartlink;
+	document.getElementById('amazon').href=amazonlink;
+	document.getElementById('snapdeal').href=snapdeallink;
+	}
+	else{
+	document.getElementById('user').innerHTML=x;
+	document.getElementById('usernumber').innerHTML=x;
+	document.getElementById('flipkart').href=flipkartlink+"&affExtParam1="+x;
+	document.getElementById('amazon').href=amazonlink;
+	document.getElementById('snapdeal').href=snapdeallink+"&aff_sub="+x;
+	}
+}
+function logout(){
+	document.cookie="Guest";
+	userlogin();
+	}
+window.onload=userlogin;
+</script>
+<center>
+<header>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation"> 
+   <div class="container navpad">
+      <div class="navbar-header"> 
+         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse"> 
+            <span class="sr-only">Toggle navigation</span> 
+            <span class="icon-bar"></span> 
+            <span class="icon-bar"></span> 
+            <span class="icon-bar"></span> 
+         </button> 
+         <a class="navbar-brand" href="index.html"><font face="logo" style="font-size:30px">Run<font style="font-family:coming">4</font>Offers.com</font></a> 
+      </div> 
+      <div class="collapse navbar-collapse" id="example-navbar-collapse"> 
+         <ul class="nav navbar-nav"> 
+            <li><a href="search.html">Search</a></li>
+            <li class="active"><a href="#">Shop Now</a></li>
+            <li><a href="Check Status.html">Recharge Status</a></li>
+            <li><a href="About Us.html">About Us</a></li>
+         </ul>
+         <div align="right" style="margin-top:5px;margin-bottom:5px;color:#777;margin-right:10px">
+         Logged in as <div class="user" id="user"></div><br>
+         <a href="shop now.html">Change</a> | <a href="#" onClick="logout()">Logout</a>
+         </div>
+      </div>
+   </div>
+</nav>
+</header>
+  
+<div class="row featurette">
+   <div class="container">
+      <div class="col-md-7">
+         <h2 class="featurette-heading">Enter Your Mobile Number(+91)</h2>
+         <div class="col-md-7 textfield">
+            <input type="text" id="mobile" class="form-control" placeholder="Enter 10 Digit Mobile Number" required autofocus>
+         </div>
+         <div class="col-md-5 links">
+            <button class="btn btn-lg btn-primary btn-block" type="submit" onClick="changelogin();">Show My Links</button>
+         </div>
+         <div id="info" class="alert alert-info note">
+            You are logged in as <div id="usernumber" style="display:inline"></div><br>
+            NOTE : Recharges will be provided if your Mobile Number is valid
+         </div>
+         <div class="col-lg-8 linkbuttons" align="center">
+            <a id="flipkart" class="userlink">
+            <button id="flipkart" class="btn btn-lg btn-info btn-block" type="submit">Shop on Flipkart.com</button>
+            </a>
+         </div>
+         <div class="col-lg-8 linkbuttons" align="center">
+            <a id="amazon" class="userlink">
+            <button class="btn btn-lg btn-info btn-block" type="submit">Shop on Amazon.com</button>
+            </a>
+         </div>
+         <div class="col-lg-8 linkbuttons" align="center">
+            <a id="snapdeal" class="userlink">
+            <button class="btn btn-lg btn-info btn-block" type="submit">Shop on Snapdeal.com</button>
+            </a>
+         </div>
+      </div>
+      <div class="col-md-5">
+         <img src="images/Flipkartbackground.gif" class="featurette-image img-responsive center-block" alt="Generic placeholder image">  
+      </div>
+   </div>
+</div>
+
+
+<footer class="footer">
+   <div class="container">
+      <p class="text-muted"><strong>Keep in Touch with Us</strong></p>
+      <a href="http://fb.me/bestshoppinghub">
+      <img src="images/fb2.jpg">
+      </a>
+      <p class="text-muted"><strong>Email : <a href="mailto:support@run4offers.com">support@run4offers.com</a><br>
+      &copy; 2015 Run4Offers.com &middot; All Rights Reserved</strong></p>
+   </div>
+</footer>
+
+
+</center>
+<script src="js/login.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/holder.min.js"></script>  
+<script src="js/bootstrap.min.js"></script>
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>

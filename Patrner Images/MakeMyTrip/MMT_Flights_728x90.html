@@ -1,0 +1,1795 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script type="text/javascript">
+var monthInString = "", monthInNum = "", getTripType = "";
+function getDateObj(input) {
+    var dayfield = input.split("/")[0];
+    var monthfield = input.split("/")[1];
+    var yearfield = input.split("/")[2];
+    var dayobj = new Date(yearfield, monthfield - 1, dayfield);
+    return dayobj;
+}
+
+function isPreviousDate(inputdate) {
+    var today = new Date();
+    inputdate.setHours(today.getHours(), today.getMinutes(), today.getSeconds(), today.getMilliseconds());
+    if (Date.parse(inputdate) < Date.parse(today)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function isPreviousDate1(fdate, tdate) {
+    if (Date.parse(tdate) < Date.parse(fdate)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+var formSubmit = function () {
+    var flightRequestUrl = "http://flights.makemytrip.com/makemytrip/directsearch.do?action=FLTSRCH&cmp=disp_vcomm_flt&did=aff";
+    document.FareSearchForm.depdate.value = setDepartureDate();
+    var deptDay = document.FareSearchForm.depdate.value.split("/")[0];
+    var deptMonth = document.FareSearchForm.depdate.value.split("/")[1];
+    var deptYear = document.FareSearchForm.depdate.value.split("/")[2];
+    var deptFullDate = new Date(deptYear, deptMonth - 1, deptDay);
+    var retnFullDate = new Date();
+    var retn_date = "";
+    var retn_month = "";
+    var retn_year = "";
+    if (getTripType == "O") {
+		retnFullDate.setDate(deptFullDate.getDate()+7);
+        //retnFullDate.setDate(deptFullDate.getDate());
+        retn_date = retnFullDate.getDate();
+        retn_month = retnFullDate.getMonth() + 1;
+        retn_year = retnFullDate.getFullYear();
+        if (retn_month < 10) {
+            retn_month = "0" + retn_month;
+        }
+        var one_day = 1000 * 60 * 60 * 24;
+        document.FareSearchForm.retndate.value = retn_date + "/" + retn_month + "/" + retn_year;
+
+        var fromdate = document.getElementById("depdate").value;
+        fromdate = getDateObj(fromdate);
+        var todate = document.getElementById("retndate").value;
+        todate = getDateObj(todate);
+        var levfrom = document.getElementById("selorigin").value;
+        if (levfrom == null || levfrom == "") {
+            alert("Please select a leaving from city");
+            document.getElementById("selorigin").focus();
+            return;
+        }
+        var goingto = document.getElementById("seldestination").value;
+        if (goingto == null || goingto == "") {
+            alert("Please select a going to city");
+            document.getElementById("seldestination").focus();
+            return;
+        }
+        if (levfrom == goingto) {
+            alert("The Leaving from and Going to cities cannot be the same.");
+            return;
+        }
+        if (isPreviousDate(fromdate) == false) {
+            alert("The Departure date cannot be prior to the current date.");
+            return;
+        }
+        /*if (isPreviousDate(todate) == false) {
+            alert("The Destination date cannot be prior to the current date.");
+            return;
+        }*/
+    } else if (getTripType == "R") {
+        document.FareSearchForm.retndate.value = setReturnDate();
+        var retnDay = document.FareSearchForm.retndate.value.split("/")[0];
+        var retnMonth = document.FareSearchForm.retndate.value.split("/")[1];
+        var retnYear = document.FareSearchForm.retndate.value.split("/")[2];
+        var fromdate = document.getElementById("depdate").value;
+        fromdate = getDateObj(fromdate);
+        var todate = document.getElementById("retndate").value;
+        todate = getDateObj(todate);
+        var levfrom = document.getElementById("selorigin").value;
+        if (levfrom == null || levfrom == "") {
+            alert("Please select a leaving from city");
+            document.getElementById("selorigin").focus();
+            return;
+        }
+        var goingto = document.getElementById("seldestination").value;
+        if (goingto == null || goingto == "") {
+            alert("Please select a going to city");
+            document.getElementById("seldestination").focus();
+            return;
+        }
+        if (levfrom == goingto) {
+            alert("The Leaving from and Going to cities cannot be the same.");
+            return;
+        }
+        if (isPreviousDate(fromdate) == false) {
+            alert("The Departure date cannot be prior to the current date.");
+            return;
+        }
+        if (isPreviousDate(todate) == false) {
+            alert("The Destination date cannot be prior to the current date.");
+            return;
+        }
+        if (isPreviousDate1(fromdate, todate) == false) {
+            alert("The Destination date cannot be prior to the Departure date.");
+            return;
+        }
+    }
+    var triptype = "";
+    var homeDepartureDate = "";
+    var homeReturnDate = "";
+    var noOfAdults = "";
+    noOfAdults = document.getElementById("selnoOfAdults").value;
+    var orginTypeObj1 = document.getElementById("selorigin").value;
+    var destinationTypeObj1 = document.getElementById("seldestination").value;
+    if (document.FareSearchForm.tt[1].checked) {
+        triptype = document.FareSearchForm.tt[1].value;
+        homeDepartureDate = document.getElementById("depdate").value;
+    } else if (document.FareSearchForm.tt[0].checked) {
+        triptype = document.FareSearchForm.tt[0].value;
+        homeDepartureDate = document.getElementById("depdate").value;
+        homeReturnDate = document.getElementById("retndate").value;
+    }
+    var carrlist = "6E,9W,AI,DN,G8,IC,IT,S2,SG,I7,";
+	var international = false; 
+	switch (destinationTypeObj1)
+{
+case "BKK":
+case "DXB":
+case "SIN":
+case "AUH":
+case "AHN":
+case "ATL":
+case "AKL":
+case "BAH":
+case "DPS":
+case "BLA":
+case "BJS":
+case "GWW":
+case "BOS":
+case "CRL":
+case "CAI":
+case "CPT":
+case "CHI":
+case "CMB":
+case "RKE":
+case "DFW":
+case "DMM":
+case "DOH":
+case "ZRB":
+case "GVA":
+case "CAN":
+case "HGH":
+case "HKG":
+case "IST":
+case "JED":
+case "JNB":
+case "KTM":
+case "USM":
+case "CCJ":
+case "KUL":
+case "KWI":
+case "LAS":
+case "LON":
+case "LAX":
+case "TOJ":
+case "MLE":
+case "MHT":
+case "MNL":
+case "MRU":
+case "BGY":
+case "ZMU":
+case "NBO":
+case "NYC":
+case "EWR":
+case "LBG":
+case "PER":
+case "HKT":
+case "XYG":
+case "RUH":
+case "RME":
+case "SFO":
+case "SEL":
+case "SHA":
+case "SHJ":
+case "YQY":
+case "TYO":
+case "TYO":
+case "YTO":
+case "YVR":
+case "VIE":
+case "WAS":
+case "ZRH":
+    international = true;
+break;
+}
+
+	switch (orginTypeObj1)
+{
+case "BKK":
+case "DXB":
+case "SIN":
+case "AUH":
+case "AHN":
+case "ATL":
+case "AKL":
+case "BAH":
+case "DPS":
+case "BLA":
+case "BJS":
+case "GWW":
+case "BOS":
+case "CRL":
+case "CAI":
+case "CPT":
+case "CHI":
+case "CMB":
+case "RKE":
+case "DFW":
+case "DMM":
+case "DOH":
+case "ZRB":
+case "GVA":
+case "CAN":
+case "HGH":
+case "HKG":
+case "IST":
+case "JED":
+case "JNB":
+case "KTM":
+case "USM":
+case "CCJ":
+case "KUL":
+case "KWI":
+case "LAS":
+case "LON":
+case "LAX":
+case "TOJ":
+case "MLE":
+case "MHT":
+case "MNL":
+case "MRU":
+case "BGY":
+case "ZMU":
+case "NBO":
+case "NYC":
+case "EWR":
+case "LBG":
+case "PER":
+case "HKT":
+case "XYG":
+case "RUH":
+case "RME":
+case "SFO":
+case "SEL":
+case "SHA":
+case "SHJ":
+case "YQY":
+case "TYO":
+case "TYO":
+case "YTO":
+case "YVR":
+case "VIE":
+case "WAS":
+case "ZRH":
+    international = true;
+break;
+}
+	
+if (international = false) 
+{
+    document.FareSearchForm.action = flightRequestUrl + "&origin=" + orginTypeObj1 + "&destination=" + destinationTypeObj1 + "&cabinClass=E&tripType=" + triptype + "&depDate=" + homeDepartureDate + "&retnDate=" + homeReturnDate + "&noOfAdults=" + noOfAdults + "&noOfChildren=0&noOfInfants=0";
+
+
+    document.FareSearchForm.target = '_blank';
+    document.FareSearchForm.submit();
+}
+else
+{
+    document.FareSearchForm.action = "http://cheapfaresindia.makemytrip.com/international/international/direct?cc=y&cmp=compare728&did=compare728" + "&frm=" + orginTypeObj1 + "&to=" + destinationTypeObj1 + "&tt=" + triptype + "&dd=" + homeDepartureDate + "&rd=" + homeReturnDate + "&adt=" + noOfAdults + "&chd=0&inf=0";
+    document.FareSearchForm.target = '_blank';
+    document.FareSearchForm.submit();
+	}
+}
+var getMonthInString = function (Month) {
+    switch (Month) {
+    case 0:
+        monthInString = "Jan";
+        break;
+    case 1:
+        monthInString = "Feb";
+        break;
+    case 2:
+        monthInString = "Mar";
+        break;
+    case 3:
+        monthInString = "Apr";
+        break;
+    case 4:
+        monthInString = "May";
+        break;
+    case 5:
+        monthInString = "Jun";
+        break;
+    case 6:
+        monthInString = "Jul";
+        break;
+    case 7:
+        monthInString = "Aug";
+        break;
+    case 8:
+        monthInString = "Sep";
+        break;
+    case 9:
+        monthInString = "Oct";
+        break;
+    case 10:
+        monthInString = "Nov";
+        break;
+    case 11:
+        monthInString = "Dec";
+        break;
+    default:
+        monthInString = "Jan";
+    }
+
+    return monthInString;
+}
+
+var getMonthInNumbers = function (Month) {
+    switch (Month) {
+    case "Jan":
+        monthInNum = "01";
+        break;
+    case "Feb":
+        monthInNum = "02";
+        break;
+    case "Mar":
+        monthInNum = "03";
+        break;
+    case "Apr":
+        monthInNum = "04";
+        break;
+    case "May":
+        monthInNum = "05";
+        break;
+    case "Jun":
+        monthInNum = "06";
+        break;
+    case "Jul":
+        monthInNum = "07";
+        break;
+    case "Aug":
+        monthInNum = "08";
+        break;
+    case "Sep":
+        monthInNum = "09";
+        break;
+    case "Oct":
+        monthInNum = "10";
+        break;
+    case "Nov":
+        monthInNum = "11";
+        break;
+    case "Dec":
+        monthInNum = "12";
+        break;
+    default:
+        monthInNum = "";
+    }
+
+    return monthInNum;
+}
+
+var setDepartureDate = function () {
+    var departureDay = "";
+    var departure_M_Y = "";
+    var departure_M = "";
+    var departure_Y = "";
+    departureDay = document.getElementById("departure_day").options[document.getElementById("departure_day").selectedIndex].value;
+    departure_M_Y = document.getElementById("departure_M_Y").options[document.getElementById("departure_M_Y").selectedIndex].value;
+    departure_M = departure_M_Y.split(" ")[0];
+    departure_Y = departure_M_Y.split(" ")[1];
+
+    if (departureDay < 10) {
+        departureDay = "0" + departureDay;
+    }
+    return (departureDay + "/" + getMonthInNumbers(departure_M) + "/" + departure_Y);
+}
+var setReturnDate = function () {
+    var returnDay = "";
+    var return_M_Y = "";
+    var return_M = "";
+    var return_Y = "";
+    returnDay = document.getElementById("return_day").options[document.getElementById("return_day").selectedIndex].value;
+    return_M_Y = document.getElementById("return_M_Y").options[document.getElementById("return_M_Y").selectedIndex].value;
+    return_M = return_M_Y.split(" ")[0];
+    return_Y = return_M_Y.split(" ")[1];
+    if (returnDay < 10) {
+        returnDay = "0" + returnDay;
+    }
+    return (returnDay + "/" + getMonthInNumbers(return_M) + "/" + return_Y);
+}
+    function daysInMonth(month, year) {
+        var dd = new Date(year, month, 0);
+        return dd.getDate();
+    }
+var fillDaysDDN = function (month_YearValue, dayFillElement) {
+    var month = month_YearValue.split(" ")[0];
+    var fullYear = month_YearValue.split(" ")[1];
+    var monthNumber = getMonthInNumbers(month);
+    var days_In_Month = daysInMonth(monthNumber, fullYear);
+    var elSel = document.getElementById(dayFillElement);
+    var selectedVal = elSel.value;
+    /*for (i = elSel.length - 1; i >= 0; i--) {
+        elSel.remove(i);
+    }*/
+    for (var i = 1; i <= days_In_Month; i++) {
+        var newOption = document.createElement("option");
+        newOption.text = i;
+        newOption.value = i;
+        if (newOption.value == selectedVal) {
+            newOption.selected = "selected";
+        }
+        try {
+            elSel.add(newOption, null);
+        } catch (ex) {
+            elSel.add(newOption);
+        }
+    }
+}
+var setDept_RetnDates = function () {
+    var today = new Date();
+    today.setDate(today.getDate());
+    dept_day = retn_day = today.getDate();
+    dept_Month = retn_Month = today.getMonth();
+    dept_FullYear = retn_FullYear = today.getFullYear();
+    MonthInStr = getMonthInString(dept_Month);
+    document.getElementById("departure_day").value = dept_day;
+    document.getElementById("return_day").value = retn_day;
+    document.getElementById("departure_M_Y").value = MonthInStr + " " + dept_FullYear;
+    document.getElementById("return_M_Y").value = MonthInStr + " " + retn_FullYear;
+}
+var setMonthYear_Field = function (elSel) {
+    var elSel = document.getElementById(elSel);
+    for (i = elSel.length - 1; i >= 0; i--) {
+        elSel.remove(i);
+    }
+    var currentMonth = new Date();
+    currentMonth.setDate(currentMonth.getDate() + 1);
+    var nextMonth = new Date();
+    for (var i = 0; i < 3; i++) {
+        if (currentMonth.getMonth() == 11) {
+            if (i == 0) {
+                nextMonth = new Date(currentMonth.getFullYear(), 11, 1);
+            } else {
+                nextMonth = new Date(currentMonth.getFullYear() + 1, i - 1, 1);
+            }
+        } else {
+            nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + i, 1);
+        }
+        nextCalculated_Month = getMonthInString(nextMonth.getMonth());
+        nextCalculated_year = nextMonth.getFullYear();
+        var newOption = document.createElement("option");
+        newOption.text = nextCalculated_Month + " " + nextCalculated_year;
+        newOption.value = nextCalculated_Month + " " + nextCalculated_year;
+        try {
+            elSel.add(newOption, null);
+        } catch (ex) {
+            elSel.add(newOption);
+        }
+    }
+}
+var checkTripType = function () {
+    for (i = 0; i < document.FareSearchForm.tt.length; i++) {
+        if (document.FareSearchForm.tt[i].checked) {
+            getTripType = document.FareSearchForm.tt[i].value;
+        }
+    }
+    if (getTripType == "O") {
+        document.getElementById("return_day").disabled = true;
+        document.getElementById("return_M_Y").disabled = true;
+        document.getElementById("return_day").size = '0';
+    } else {
+        document.getElementById("return_day").disabled = false;
+        document.getElementById("return_M_Y").disabled = false;
+    }
+}
+var loadDependencies = function () {
+    checkTripType();
+    setMonthYear_Field('departure_M_Y');
+    setMonthYear_Field('return_M_Y');
+    fillDaysDDN(document.getElementById("departure_M_Y").options[document.getElementById("departure_M_Y").selectedIndex].value, 'departure_day');
+    fillDaysDDN(document.getElementById("return_M_Y").options[document.getElementById("return_M_Y").selectedIndex].value, 'return_day');
+    setDept_RetnDates();
+    document.getElementById("departure_day").size = "1";
+    document.getElementById("departure_M_Y").size = "1";
+    document.getElementById("return_day").size = "1";
+    document.getElementById("return_M_Y").size = "1";
+}
+    function addEvent(obj, evType, fn) {
+        if (obj.addEventListener) {
+            obj.addEventListener(evType, fn, false);
+            return true;
+        } else if (obj.attachEvent) {
+            var r = obj.attachEvent("on" + evType, fn);
+            return r;
+        } else {
+            return false;
+        }
+    }
+addEvent(window, 'load', loadDependencies);
+
+function setSize(a, b) {
+	if ( document.getElementById(a).disabled ) {
+		return false;
+	}
+    resetSize();
+	document.getElementById(a).setAttribute('size',b);
+}
+function resetSize() {
+    document.getElementById("selorigin").setAttribute("size", 0);
+    document.getElementById("seldestination").setAttribute("size", 0);
+    document.getElementById("departure_day").setAttribute("size", 0);	
+    document.getElementById("return_day").setAttribute("size", 0);
+}
+</script>
+<style type="text/css">
+*,body {
+	margin:0px;
+	padding:0px;
+}
+.red-txt {
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:15px;
+	font-weight:bold;
+	color:#d4002b;
+}
+.small-txt {
+	font-family:verdana,Helvetica,sans-serif;
+	font-size:11px;
+	color:#000000;
+	text-decoration:none;
+}
+.list-menu {
+	width:80px;
+	font-size:10px;
+}
+.list-menu01 {
+	width:65px;
+	font-size:10px;
+}
+.date-list-menu {
+	width:40px;
+	font-size:10px;
+}
+.small-list-menu {
+	width:70px;
+	font-size:10px;
+}
+#copyright {
+	font-size:8px;
+	font-family:Arial,Helvetica,sans-serif;
+	line-height:9px;
+	padding-left:3px;
+	padding-right:3px;
+	color:#333333;
+}
+.senAdult {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.divBox {
+	position:absolute;
+	top:125px;
+}
+.mmtLeft {
+	float:left;
+	width:726px;
+	height:88px;
+	border:1px solid #000;
+	background:#d5e4fb url(http://media.vcommission.com/brand/files/vcm/406/20140429180640-img01.jpg) no-repeat;
+}
+.lf_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+	z-index:2;
+}
+.lf_mmtDiv{height: 16px; width: 80px; top:15px; left: 0px; z-index:4; display: block;}
+.gT_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+	z-index:2;
+}
+.gT_mmtDiv {height: 16px; width: 80px; top:15px; left: 0px; z-index:4; display: block;}
+.dd_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.dd_mmtDiv {height: 16px; width: 40px; top:15px; left: 0px; z-index:1; display: block;}
+.dd_mmt2 {
+	position:absolute;
+	top:15px;
+	left:42px;
+}
+.rd_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.rd_mmtDiv{height: 16px; width: 40px; top:15px; left: 0px; z-index:1; display: block;}
+.rd_mmt2 {
+	position:absolute;
+	top:15px;
+	left: 42px;
+}
+
+.rtnOne {    left: 155px;    position: absolute;    top: -19px;    width: 200px;}
+.rtnOneIn{width:100px; float:left;}
+.rtnOneIn input{ float:left; margin-right:5px;}
+.ContAllD{width:500px; height:41px;  margin-top:47px; float:left; margin-left:130px;_margin-left:67px; position:relative;}
+.seloriginDv{width:85px; position:relative; float:left;height:30px; }
+.seldestinationDv{width:85px; position:relative; float:left;height:30px; }
+.PasgrsWd{ width:75px;}
+.dtFormat{width:115px;}
+.btnSearchN{ position: absolute;    right: -88px;    top: 10px;}
+</style>
+</head>
+<body>
+<div class="mmtLeft">
+<form  method="post" name="FareSearchForm" style="margin:0px; padding:0px;" id="FareSearchForm">
+<input type="hidden" name="depdate" id="depdate" /><input type="hidden" name="retndate" id="retndate" />
+  <div class="ContAllD">
+    <div class="rtnOne">
+    <div class="rtnOneIn small-txt"><input type="radio" id="returntrip" value="R" name="tt" class="flL radio" onclick="checkTripType();" /> <span>Round Trip</span></div>
+    <div class="rtnOneIn small-txt"><input type="radio" value="O" id="radtripType" name="tt" checked="checked" class="flL radio" onclick="checkTripType();" /> One Way</div>
+    </div>
+    
+    <div class="seloriginDv small-txt">Leaving from:<br />
+    	<div class="divBox lf_mmtDiv" id="divBox" onclick="setSize('selorigin', 9)" >
+    		<img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="80" />
+         </div>
+    <select name="selorigin" class="list-menu lf_mmt" id="selorigin" onchange="resetSize('selorigin', 0)">
+                  <option value="">---------------</option>
+                  <option value='BLR'>Bangalore</option>
+                  <option value='MAA'>Chennai</option>
+                  <option value='DEL'>Delhi</option>
+                  <option value='GOI'>Goa</option>
+                  <option value='HYD'>Hyderabad</option>
+                  <option value='CCU'>Kolkata</option>
+                  <option value='BOM'>Mumbai</option>
+                  <option value='PNQ'>Pune</option>
+				  <option value='BKK'>Bangkok</option>
+				  <option value='DXB'>Dubai</option>
+				  <option value='SIN'>Singapore</option>
+                  <option value="">---------------</option>
+                  <option value='IXA'>Agartala</option>
+                  <option value='AGX'>Agatti Island</option>
+                  <option value='AMD'>Ahmedabad</option>
+                  <option value='AJL'>Aizwal</option>
+                  <option value='IXD'>Allahabad</option>
+                  <option value='ATQ'>Amritsar</option>
+                  <option value='IXU'>Aurangabad</option>
+                  <option value='IXB'>Bagdogra</option>
+                  <option value='BLR'>Bangalore</option>
+                  <option value='IXG'>Belgaum</option>
+                  <option value='BEP'>Bellary</option>
+                  <option value='BHU'>Bhavnagar</option>
+                  <option value='BHO'>Bhopal</option>
+                  <option value='BBI'>Bhubaneshwar</option>
+                  <option value='BHJ'>Bhuj</option>
+                  <option value='CCJ'>Calicut</option>
+                  <option value='IXC'>Chandigarh</option>
+                  <option value='MAA'>Chennai</option>
+                  <option value='COK'>Cochin</option>
+                  <option value='CJB'>Coimbatore</option>
+                  <option value='DED'>Dehradun</option>
+                  <option value='DHM'>Dharamshala</option>
+                  <option value='DIB'>Dibrugarh</option>
+                  <option value='DMU'>Dimapur</option>
+                  <option value='DIU'>Diu</option>
+                  <option value='GAY'>Gaya</option>
+                  <option value='GOI'>Goa</option>
+                  <option value='GOP'>Gorakhpur</option>
+                  <option value='GAU'>Guwahati</option>
+                  <option value='GWL'>Gwalior</option>
+                  <option value='HBX'>Hubli</option>
+                  <option value='HYD'>Hyderabad</option>
+                  <option value='IMF'>Imphal</option>
+                  <option value='IDR'>Indore</option>
+                  <option value='JLR'>Jabalpur</option>
+                  <option value='JAI'>Jaipur</option>
+                  <option value='IXJ'>Jammu</option>
+                  <option value='JGA'>Jamnagar</option>
+                  <option value='JDH'>Jodhpur</option>
+                  <option value='JRH'>Jorhat</option>
+                  <option value='IXY'>Kandla</option>
+                  <option value='HJR'>Khajuraho</option>
+                  <option value='KLH'>Kolhapur</option>
+                  <option value='CCU'>Kolkata</option>
+                  <option value='KUU'>Kullu</option>
+                  <option value='IXL'>Leh</option>
+                  <option value='IXI'>Lilabari</option>
+                  <option value='LKO'>Lucknow</option>
+                  <option value='IXM'>Madurai</option>
+                  <option value='IXE'>Mangalore</option>
+                  <option value='BOM'>Mumbai</option>
+                  <option value='NAG'>Nagpur</option>
+                  <option value='DEL'>New Delhi</option>
+                  <option value='IXP'>Pathankot</option>
+                  <option value='PAT'>Patna</option>
+                  <option value='PBD'>Porbandar</option>
+                  <option value='IXZ'>Port Blair</option>
+                  <option value='PNQ'>Pune</option>
+                  <option value='RPR'>Raipur</option>
+                  <option value='RJA'>Rajahmundry</option>
+                  <option value='RAJ'>Rajkot</option>
+                  <option value='IXR'>Ranchi</option>
+                  <option value='SHL'>Shillong</option>
+                  <option value='SLV'>Shimla</option>
+                  <option value='IXS'>Silchar</option>
+                  <option value='SXR'>Srinagar</option>
+                  <option value='STV'>Surat</option>
+                  <option value='TEZ'>Tezpur</option>
+                  <option value='TRZ'>Tiruchirapally</option>
+                  <option value='TIR'>Tirupati</option>
+                  <option value='TRV'>Trivandrum</option>
+                  <option value='TCR'>Tuticorin</option>
+                  <option value='UDR'>Udaipur</option>
+                  <option value='BDQ'>Vadodara</option>
+                  <option value='VNS'>Varanasi</option>
+                  <option value='VGA'>Vijaywada</option>
+                  <option value='VTZ'>Vishakhapatnam</option>
+				 <option value="">---------------</option>
+				  <option value='AUH'>Abu Dhabi</option>
+				<option value='AHN'>Athens</option>
+				<option value='ATL'>Atlanta</option>
+				<option value='AKL'>Auckland</option>
+				<option value='BAH'>Bahrain</option>
+				<option value='DPS'>Bali</option>
+				<option value='BLA'>Barcelona</option>
+				<option value='BJS'>Beijing</option>
+				<option value='GWW'>Berlin</option>
+				<option value='BOS'>Boston</option>
+				<option value='CRL'>Brussels</option>
+				<option value='CAI'>Cairo</option>
+				<option value='CPT'>Cape Town</option>
+				<option value='CHI'>Chicago</option>
+				<option value='CMB'>Colombo</option>
+				<option value='RKE'>Copenhagen</option>
+				<option value='DFW'>Dallas/Fort Worth</option>
+				<option value='DMM'>Dammam</option>
+				<option value='DOH'>Doha</option>
+				<option value='ZRB'>Frankfurt</option>
+				<option value='GVA'>Geneva</option>
+				<option value='CAN'>Guangzhou</option>
+				<option value='HGH'>Hangzhou</option>
+				<option value='HKG'>Hong Kong</option>
+				<option value='IST'>Istanbul</option>
+				<option value='JED'>Jeddah</option>
+				<option value='JNB'>Johannesburg</option>
+				<option value='KTM'>Kathmandu</option>
+				<option value='USM'>Koh Samui</option>
+				<option value='CCJ'>Kozhikode</option>
+				<option value='KUL'>Kuala Lumpur</option>
+				<option value='KWI'>Kuwait</option>
+				<option value='LAS'>Las Vegas</option>
+				<option value='LON'>London </option>
+				<option value='LAX'>Los Angeles</option>
+				<option value='TOJ'>Madrid</option>
+				<option value='MLE'>Male</option>
+				<option value='MHT'>Manchester</option>
+				<option value='MNL'>Manila</option>
+				<option value='MRU'>Mauritius</option>
+				<option value='BGY'>Milan</option>
+				<option value='ZMU'>Munich</option>
+				<option value='NBO'>Nairobi</option>
+				<option value='NYC'>New York</option>
+				<option value='EWR'>Newark</option>
+				<option value='LBG'>Paris</option>
+				<option value='PER'>Perth</option>
+				<option value='HKT'>Phuket</option>
+				<option value='XYG'>Prague</option>
+				<option value='RUH'>Riyadh</option>
+				<option value='RME'>Rome</option>
+				<option value='SFO'>San Francisco</option>
+				<option value='SEL'>Seoul</option>
+				<option value='SHA'>Shanghai</option>
+				<option value='SHJ'>Sharjah</option>
+				<option value='YQY'>Sydney</option>
+				<option value='TYO'>Tokyo</option>
+				<option value='TYO'>Tokyo</option>
+				<option value='YTO'>Toronto</option>
+				<option value='YVR'>Vancouver</option>
+				<option value='VIE'>Vienna</option>
+				<option value='WAS'>Washington</option>
+				<option value='ZRH'>Zurich</option>
+                </select>   </div>
+                <div class="seldestinationDv small-txt">Going to:<br /><div class="divBox gT_mmtDiv" id="divBox2" onclick="setSize('seldestination', 9)" ><img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="80" /></div>
+              <select name="seldestination" class="list-menu gT_mmt" id="seldestination" tabindex="4" onchange="resetSize('seldestination', 0)">
+                <option value="">---------------</option>
+                <option value='BLR'>Bangalore</option>
+                <option value='MAA'>Chennai</option>
+                <option value='DEL'>Delhi</option>
+                <option value='GOI'>Goa</option>
+                <option value='HYD'>Hyderabad</option>
+                <option value='CCU'>Kolkata</option>
+                <option value='BOM'>Mumbai</option>
+                <option value='PNQ'>Pune</option>
+				
+                <option value="">---------------</option>
+                <option value='IXA'>Agartala</option>
+                <option value='AGX'>Agatti Island</option>
+                <option value='AMD'>Ahmedabad</option>
+                <option value='AJL'>Aizwal</option>
+                <option value='IXD'>Allahabad</option>
+                <option value='ATQ'>Amritsar</option>
+                <option value='IXU'>Aurangabad</option>
+                <option value='IXB'>Bagdogra</option>
+                <option value='BLR'>Bangalore</option>
+                <option value='IXG'>Belgaum</option>
+                <option value='BEP'>Bellary</option>
+                <option value='BHU'>Bhavnagar</option>
+                <option value='BHO'>Bhopal</option>
+                <option value='BBI'>Bhubaneshwar</option>
+                <option value='BHJ'>Bhuj</option>
+                <option value='CCJ'>Calicut</option>
+                <option value='IXC'>Chandigarh</option>
+                <option value='MAA'>Chennai</option>
+                <option value='COK'>Cochin</option>
+                <option value='CJB'>Coimbatore</option>
+                <option value='DED'>Dehradun</option>
+                <option value='DHM'>Dharamshala</option>
+                <option value='DIB'>Dibrugarh</option>
+                <option value='DMU'>Dimapur</option>
+                <option value='DIU'>Diu</option>
+                <option value='GAY'>Gaya</option>
+                <option value='GOI'>Goa</option>
+                <option value='GOP'>Gorakhpur</option>
+                <option value='GAU'>Guwahati</option>
+                <option value='GWL'>Gwalior</option>
+                <option value='HBX'>Hubli</option>
+                <option value='HYD'>Hyderabad</option>
+                <option value='IMF'>Imphal</option>
+                <option value='IDR'>Indore</option>
+                <option value='JLR'>Jabalpur</option>
+                <option value='JAI'>Jaipur</option>
+                <option value='IXJ'>Jammu</option>
+                <option value='JGA'>Jamnagar</option>
+                <option value='JDH'>Jodhpur</option>
+                <option value='JRH'>Jorhat</option>
+                <option value='IXY'>Kandla</option>
+                <option value='HJR'>Khajuraho</option>
+                <option value='KLH'>Kolhapur</option>
+                <option value='CCU'>Kolkata</option>
+                <option value='KUU'>Kullu</option>
+                <option value='IXL'>Leh</option>
+                <option value='IXI'>Lilabari</option>
+                <option value='LKO'>Lucknow</option>
+                <option value='IXM'>Madurai</option>
+                <option value='IXE'>Mangalore</option>
+                <option value='BOM'>Mumbai</option>
+                <option value='NAG'>Nagpur</option>
+                <option value='DEL'>New Delhi</option>
+                <option value='IXP'>Pathankot</option>
+                <option value='PAT'>Patna</option>
+                <option value='PBD'>Porbandar</option>
+                <option value='IXZ'>Port Blair</option>
+                <option value='PNQ'>Pune</option>
+                <option value='RPR'>Raipur</option>
+                <option value='RJA'>Rajahmundry</option>
+                <option value='RAJ'>Rajkot</option>
+                <option value='IXR'>Ranchi</option>
+                <option value='SHL'>Shillong</option>
+                <option value='SLV'>Shimla</option>
+                <option value='IXS'>Silchar</option>
+                <option value='SXR'>Srinagar</option>
+                <option value='STV'>Surat</option>
+                <option value='TEZ'>Tezpur</option>
+                <option value='TRZ'>Tiruchirapally</option>
+                <option value='TIR'>Tirupati</option>
+                <option value='TRV'>Trivandrum</option>
+                <option value='TCR'>Tuticorin</option>
+                <option value='UDR'>Udaipur</option>
+                <option value='BDQ'>Vadodara</option>
+                <option value='VNS'>Varanasi</option>
+                <option value='VGA'>Vijaywada</option>
+
+                <option value='VTZ'>Vishakhapatnam</option>
+				<option value="">---------------</option>
+				  
+              </select></div>
+              
+              <div class="seldestinationDv  small-txt PasgrsWd">Passengers:<br /><select name="selnoOfAdults" class="list-menu01 senAdult" id="selnoOfAdults" tabindex="9">
+                <option value="1" selected="selected">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select></div>
+              
+              <div class="seldestinationDv  small-txt dtFormat">Depart Date:<br /><div class="divBox rd_mmtDiv" id="divBox3" onclick="setSize('departure_day', 7)"><img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="40" /></div><select name="departure_day" class="date-list-menu dd_mmt" id="departure_day" onchange="resetSize('departure_day', 0)">
+              <option value="">DD</option>
+                  </select>
+                    <select name="departure_M_Y" class="small-list-menu dd_mmt2"  id="departure_M_Y" onchange="fillDaysDDN(this.options[this.selectedIndex].value,'departure_day');" >
+                    </select>
+              
+              
+              </div>
+              
+              <div class="seldestinationDv  small-txt dtFormat">Return Date:<br />
+              <div class="divBox rd_mmtDiv" id="divBox4" onclick="setSize('return_day', 7)" style=""><img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="40" /></div><select name="return_day" class="date-list-menu rd_mmt" id="return_day" onchange="resetSize('return_day', 0)">
+              <option value="">DD</option>
+                  </select>
+                    <select name="return_M_Y" class="small-list-menu rd_mmt2"  id="return_M_Y" onchange="fillDaysDDN(this.options[this.selectedIndex].value,'return_day');" >
+                    </select>  
+              </div>
+             <a href="http://tracking.vcommission.com/aff_c?offer_id=647&aff_id=41875&file_id=15149" class="btnSearchN"><img src="http://media.vcommission.com/brand/files/vcm/406/20140429180644-search.gif" alt="" width="109" height="29" border="0" style="cursor: pointer"  tabindex="14" /></a>
+                            
+ </div>
+    
+     
+        </form>
+</div>
+<img src="http://tracking.vcommission.com/aff_i?offer_id=647&aff_id=41875&file_id=15149" width="1" height="1" /></body>
+</html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script type="text/javascript">
+var monthInString = "", monthInNum = "", getTripType = "";
+function getDateObj(input) {
+    var dayfield = input.split("/")[0];
+    var monthfield = input.split("/")[1];
+    var yearfield = input.split("/")[2];
+    var dayobj = new Date(yearfield, monthfield - 1, dayfield);
+    return dayobj;
+}
+
+function isPreviousDate(inputdate) {
+    var today = new Date();
+    inputdate.setHours(today.getHours(), today.getMinutes(), today.getSeconds(), today.getMilliseconds());
+    if (Date.parse(inputdate) < Date.parse(today)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function isPreviousDate1(fdate, tdate) {
+    if (Date.parse(tdate) < Date.parse(fdate)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+var formSubmit = function () {
+    var flightRequestUrl = "http://flights.makemytrip.com/makemytrip/directsearch.do?action=FLTSRCH&cmp=disp_vcomm_flt&did=aff";
+    document.FareSearchForm.depdate.value = setDepartureDate();
+    var deptDay = document.FareSearchForm.depdate.value.split("/")[0];
+    var deptMonth = document.FareSearchForm.depdate.value.split("/")[1];
+    var deptYear = document.FareSearchForm.depdate.value.split("/")[2];
+    var deptFullDate = new Date(deptYear, deptMonth - 1, deptDay);
+    var retnFullDate = new Date();
+    var retn_date = "";
+    var retn_month = "";
+    var retn_year = "";
+    if (getTripType == "O") {
+		retnFullDate.setDate(deptFullDate.getDate()+7);
+        //retnFullDate.setDate(deptFullDate.getDate());
+        retn_date = retnFullDate.getDate();
+        retn_month = retnFullDate.getMonth() + 1;
+        retn_year = retnFullDate.getFullYear();
+        if (retn_month < 10) {
+            retn_month = "0" + retn_month;
+        }
+        var one_day = 1000 * 60 * 60 * 24;
+        document.FareSearchForm.retndate.value = retn_date + "/" + retn_month + "/" + retn_year;
+
+        var fromdate = document.getElementById("depdate").value;
+        fromdate = getDateObj(fromdate);
+        var todate = document.getElementById("retndate").value;
+        todate = getDateObj(todate);
+        var levfrom = document.getElementById("selorigin").value;
+        if (levfrom == null || levfrom == "") {
+            alert("Please select a leaving from city");
+            document.getElementById("selorigin").focus();
+            return;
+        }
+        var goingto = document.getElementById("seldestination").value;
+        if (goingto == null || goingto == "") {
+            alert("Please select a going to city");
+            document.getElementById("seldestination").focus();
+            return;
+        }
+        if (levfrom == goingto) {
+            alert("The Leaving from and Going to cities cannot be the same.");
+            return;
+        }
+        if (isPreviousDate(fromdate) == false) {
+            alert("The Departure date cannot be prior to the current date.");
+            return;
+        }
+        /*if (isPreviousDate(todate) == false) {
+            alert("The Destination date cannot be prior to the current date.");
+            return;
+        }*/
+    } else if (getTripType == "R") {
+        document.FareSearchForm.retndate.value = setReturnDate();
+        var retnDay = document.FareSearchForm.retndate.value.split("/")[0];
+        var retnMonth = document.FareSearchForm.retndate.value.split("/")[1];
+        var retnYear = document.FareSearchForm.retndate.value.split("/")[2];
+        var fromdate = document.getElementById("depdate").value;
+        fromdate = getDateObj(fromdate);
+        var todate = document.getElementById("retndate").value;
+        todate = getDateObj(todate);
+        var levfrom = document.getElementById("selorigin").value;
+        if (levfrom == null || levfrom == "") {
+            alert("Please select a leaving from city");
+            document.getElementById("selorigin").focus();
+            return;
+        }
+        var goingto = document.getElementById("seldestination").value;
+        if (goingto == null || goingto == "") {
+            alert("Please select a going to city");
+            document.getElementById("seldestination").focus();
+            return;
+        }
+        if (levfrom == goingto) {
+            alert("The Leaving from and Going to cities cannot be the same.");
+            return;
+        }
+        if (isPreviousDate(fromdate) == false) {
+            alert("The Departure date cannot be prior to the current date.");
+            return;
+        }
+        if (isPreviousDate(todate) == false) {
+            alert("The Destination date cannot be prior to the current date.");
+            return;
+        }
+        if (isPreviousDate1(fromdate, todate) == false) {
+            alert("The Destination date cannot be prior to the Departure date.");
+            return;
+        }
+    }
+    var triptype = "";
+    var homeDepartureDate = "";
+    var homeReturnDate = "";
+    var noOfAdults = "";
+    noOfAdults = document.getElementById("selnoOfAdults").value;
+    var orginTypeObj1 = document.getElementById("selorigin").value;
+    var destinationTypeObj1 = document.getElementById("seldestination").value;
+    if (document.FareSearchForm.tt[1].checked) {
+        triptype = document.FareSearchForm.tt[1].value;
+        homeDepartureDate = document.getElementById("depdate").value;
+    } else if (document.FareSearchForm.tt[0].checked) {
+        triptype = document.FareSearchForm.tt[0].value;
+        homeDepartureDate = document.getElementById("depdate").value;
+        homeReturnDate = document.getElementById("retndate").value;
+    }
+    var carrlist = "6E,9W,AI,DN,G8,IC,IT,S2,SG,I7,";
+	var international = false; 
+	switch (destinationTypeObj1)
+{
+case "BKK":
+case "DXB":
+case "SIN":
+case "AUH":
+case "AHN":
+case "ATL":
+case "AKL":
+case "BAH":
+case "DPS":
+case "BLA":
+case "BJS":
+case "GWW":
+case "BOS":
+case "CRL":
+case "CAI":
+case "CPT":
+case "CHI":
+case "CMB":
+case "RKE":
+case "DFW":
+case "DMM":
+case "DOH":
+case "ZRB":
+case "GVA":
+case "CAN":
+case "HGH":
+case "HKG":
+case "IST":
+case "JED":
+case "JNB":
+case "KTM":
+case "USM":
+case "CCJ":
+case "KUL":
+case "KWI":
+case "LAS":
+case "LON":
+case "LAX":
+case "TOJ":
+case "MLE":
+case "MHT":
+case "MNL":
+case "MRU":
+case "BGY":
+case "ZMU":
+case "NBO":
+case "NYC":
+case "EWR":
+case "LBG":
+case "PER":
+case "HKT":
+case "XYG":
+case "RUH":
+case "RME":
+case "SFO":
+case "SEL":
+case "SHA":
+case "SHJ":
+case "YQY":
+case "TYO":
+case "TYO":
+case "YTO":
+case "YVR":
+case "VIE":
+case "WAS":
+case "ZRH":
+    international = true;
+break;
+}
+
+	switch (orginTypeObj1)
+{
+case "BKK":
+case "DXB":
+case "SIN":
+case "AUH":
+case "AHN":
+case "ATL":
+case "AKL":
+case "BAH":
+case "DPS":
+case "BLA":
+case "BJS":
+case "GWW":
+case "BOS":
+case "CRL":
+case "CAI":
+case "CPT":
+case "CHI":
+case "CMB":
+case "RKE":
+case "DFW":
+case "DMM":
+case "DOH":
+case "ZRB":
+case "GVA":
+case "CAN":
+case "HGH":
+case "HKG":
+case "IST":
+case "JED":
+case "JNB":
+case "KTM":
+case "USM":
+case "CCJ":
+case "KUL":
+case "KWI":
+case "LAS":
+case "LON":
+case "LAX":
+case "TOJ":
+case "MLE":
+case "MHT":
+case "MNL":
+case "MRU":
+case "BGY":
+case "ZMU":
+case "NBO":
+case "NYC":
+case "EWR":
+case "LBG":
+case "PER":
+case "HKT":
+case "XYG":
+case "RUH":
+case "RME":
+case "SFO":
+case "SEL":
+case "SHA":
+case "SHJ":
+case "YQY":
+case "TYO":
+case "TYO":
+case "YTO":
+case "YVR":
+case "VIE":
+case "WAS":
+case "ZRH":
+    international = true;
+break;
+}
+	
+if (international = false) 
+{
+    document.FareSearchForm.action = flightRequestUrl + "&origin=" + orginTypeObj1 + "&destination=" + destinationTypeObj1 + "&cabinClass=E&tripType=" + triptype + "&depDate=" + homeDepartureDate + "&retnDate=" + homeReturnDate + "&noOfAdults=" + noOfAdults + "&noOfChildren=0&noOfInfants=0";
+
+
+    document.FareSearchForm.target = '_blank';
+    document.FareSearchForm.submit();
+}
+else
+{
+    document.FareSearchForm.action = "http://cheapfaresindia.makemytrip.com/international/international/direct?cc=y&cmp=compare728&did=compare728" + "&frm=" + orginTypeObj1 + "&to=" + destinationTypeObj1 + "&tt=" + triptype + "&dd=" + homeDepartureDate + "&rd=" + homeReturnDate + "&adt=" + noOfAdults + "&chd=0&inf=0";
+    document.FareSearchForm.target = '_blank';
+    document.FareSearchForm.submit();
+	}
+}
+var getMonthInString = function (Month) {
+    switch (Month) {
+    case 0:
+        monthInString = "Jan";
+        break;
+    case 1:
+        monthInString = "Feb";
+        break;
+    case 2:
+        monthInString = "Mar";
+        break;
+    case 3:
+        monthInString = "Apr";
+        break;
+    case 4:
+        monthInString = "May";
+        break;
+    case 5:
+        monthInString = "Jun";
+        break;
+    case 6:
+        monthInString = "Jul";
+        break;
+    case 7:
+        monthInString = "Aug";
+        break;
+    case 8:
+        monthInString = "Sep";
+        break;
+    case 9:
+        monthInString = "Oct";
+        break;
+    case 10:
+        monthInString = "Nov";
+        break;
+    case 11:
+        monthInString = "Dec";
+        break;
+    default:
+        monthInString = "Jan";
+    }
+
+    return monthInString;
+}
+
+var getMonthInNumbers = function (Month) {
+    switch (Month) {
+    case "Jan":
+        monthInNum = "01";
+        break;
+    case "Feb":
+        monthInNum = "02";
+        break;
+    case "Mar":
+        monthInNum = "03";
+        break;
+    case "Apr":
+        monthInNum = "04";
+        break;
+    case "May":
+        monthInNum = "05";
+        break;
+    case "Jun":
+        monthInNum = "06";
+        break;
+    case "Jul":
+        monthInNum = "07";
+        break;
+    case "Aug":
+        monthInNum = "08";
+        break;
+    case "Sep":
+        monthInNum = "09";
+        break;
+    case "Oct":
+        monthInNum = "10";
+        break;
+    case "Nov":
+        monthInNum = "11";
+        break;
+    case "Dec":
+        monthInNum = "12";
+        break;
+    default:
+        monthInNum = "";
+    }
+
+    return monthInNum;
+}
+
+var setDepartureDate = function () {
+    var departureDay = "";
+    var departure_M_Y = "";
+    var departure_M = "";
+    var departure_Y = "";
+    departureDay = document.getElementById("departure_day").options[document.getElementById("departure_day").selectedIndex].value;
+    departure_M_Y = document.getElementById("departure_M_Y").options[document.getElementById("departure_M_Y").selectedIndex].value;
+    departure_M = departure_M_Y.split(" ")[0];
+    departure_Y = departure_M_Y.split(" ")[1];
+
+    if (departureDay < 10) {
+        departureDay = "0" + departureDay;
+    }
+    return (departureDay + "/" + getMonthInNumbers(departure_M) + "/" + departure_Y);
+}
+var setReturnDate = function () {
+    var returnDay = "";
+    var return_M_Y = "";
+    var return_M = "";
+    var return_Y = "";
+    returnDay = document.getElementById("return_day").options[document.getElementById("return_day").selectedIndex].value;
+    return_M_Y = document.getElementById("return_M_Y").options[document.getElementById("return_M_Y").selectedIndex].value;
+    return_M = return_M_Y.split(" ")[0];
+    return_Y = return_M_Y.split(" ")[1];
+    if (returnDay < 10) {
+        returnDay = "0" + returnDay;
+    }
+    return (returnDay + "/" + getMonthInNumbers(return_M) + "/" + return_Y);
+}
+    function daysInMonth(month, year) {
+        var dd = new Date(year, month, 0);
+        return dd.getDate();
+    }
+var fillDaysDDN = function (month_YearValue, dayFillElement) {
+    var month = month_YearValue.split(" ")[0];
+    var fullYear = month_YearValue.split(" ")[1];
+    var monthNumber = getMonthInNumbers(month);
+    var days_In_Month = daysInMonth(monthNumber, fullYear);
+    var elSel = document.getElementById(dayFillElement);
+    var selectedVal = elSel.value;
+    /*for (i = elSel.length - 1; i >= 0; i--) {
+        elSel.remove(i);
+    }*/
+    for (var i = 1; i <= days_In_Month; i++) {
+        var newOption = document.createElement("option");
+        newOption.text = i;
+        newOption.value = i;
+        if (newOption.value == selectedVal) {
+            newOption.selected = "selected";
+        }
+        try {
+            elSel.add(newOption, null);
+        } catch (ex) {
+            elSel.add(newOption);
+        }
+    }
+}
+var setDept_RetnDates = function () {
+    var today = new Date();
+    today.setDate(today.getDate());
+    dept_day = retn_day = today.getDate();
+    dept_Month = retn_Month = today.getMonth();
+    dept_FullYear = retn_FullYear = today.getFullYear();
+    MonthInStr = getMonthInString(dept_Month);
+    document.getElementById("departure_day").value = dept_day;
+    document.getElementById("return_day").value = retn_day;
+    document.getElementById("departure_M_Y").value = MonthInStr + " " + dept_FullYear;
+    document.getElementById("return_M_Y").value = MonthInStr + " " + retn_FullYear;
+}
+var setMonthYear_Field = function (elSel) {
+    var elSel = document.getElementById(elSel);
+    for (i = elSel.length - 1; i >= 0; i--) {
+        elSel.remove(i);
+    }
+    var currentMonth = new Date();
+    currentMonth.setDate(currentMonth.getDate() + 1);
+    var nextMonth = new Date();
+    for (var i = 0; i < 3; i++) {
+        if (currentMonth.getMonth() == 11) {
+            if (i == 0) {
+                nextMonth = new Date(currentMonth.getFullYear(), 11, 1);
+            } else {
+                nextMonth = new Date(currentMonth.getFullYear() + 1, i - 1, 1);
+            }
+        } else {
+            nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + i, 1);
+        }
+        nextCalculated_Month = getMonthInString(nextMonth.getMonth());
+        nextCalculated_year = nextMonth.getFullYear();
+        var newOption = document.createElement("option");
+        newOption.text = nextCalculated_Month + " " + nextCalculated_year;
+        newOption.value = nextCalculated_Month + " " + nextCalculated_year;
+        try {
+            elSel.add(newOption, null);
+        } catch (ex) {
+            elSel.add(newOption);
+        }
+    }
+}
+var checkTripType = function () {
+    for (i = 0; i < document.FareSearchForm.tt.length; i++) {
+        if (document.FareSearchForm.tt[i].checked) {
+            getTripType = document.FareSearchForm.tt[i].value;
+        }
+    }
+    if (getTripType == "O") {
+        document.getElementById("return_day").disabled = true;
+        document.getElementById("return_M_Y").disabled = true;
+        document.getElementById("return_day").size = '0';
+    } else {
+        document.getElementById("return_day").disabled = false;
+        document.getElementById("return_M_Y").disabled = false;
+    }
+}
+var loadDependencies = function () {
+    checkTripType();
+    setMonthYear_Field('departure_M_Y');
+    setMonthYear_Field('return_M_Y');
+    fillDaysDDN(document.getElementById("departure_M_Y").options[document.getElementById("departure_M_Y").selectedIndex].value, 'departure_day');
+    fillDaysDDN(document.getElementById("return_M_Y").options[document.getElementById("return_M_Y").selectedIndex].value, 'return_day');
+    setDept_RetnDates();
+    document.getElementById("departure_day").size = "1";
+    document.getElementById("departure_M_Y").size = "1";
+    document.getElementById("return_day").size = "1";
+    document.getElementById("return_M_Y").size = "1";
+}
+    function addEvent(obj, evType, fn) {
+        if (obj.addEventListener) {
+            obj.addEventListener(evType, fn, false);
+            return true;
+        } else if (obj.attachEvent) {
+            var r = obj.attachEvent("on" + evType, fn);
+            return r;
+        } else {
+            return false;
+        }
+    }
+addEvent(window, 'load', loadDependencies);
+
+function setSize(a, b) {
+	if ( document.getElementById(a).disabled ) {
+		return false;
+	}
+    resetSize();
+	document.getElementById(a).setAttribute('size',b);
+}
+function resetSize() {
+    document.getElementById("selorigin").setAttribute("size", 0);
+    document.getElementById("seldestination").setAttribute("size", 0);
+    document.getElementById("departure_day").setAttribute("size", 0);	
+    document.getElementById("return_day").setAttribute("size", 0);
+}
+</script>
+<style type="text/css">
+*,body {
+	margin:0px;
+	padding:0px;
+}
+.red-txt {
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:15px;
+	font-weight:bold;
+	color:#d4002b;
+}
+.small-txt {
+	font-family:verdana,Helvetica,sans-serif;
+	font-size:11px;
+	color:#000000;
+	text-decoration:none;
+}
+.list-menu {
+	width:80px;
+	font-size:10px;
+}
+.list-menu01 {
+	width:65px;
+	font-size:10px;
+}
+.date-list-menu {
+	width:40px;
+	font-size:10px;
+}
+.small-list-menu {
+	width:70px;
+	font-size:10px;
+}
+#copyright {
+	font-size:8px;
+	font-family:Arial,Helvetica,sans-serif;
+	line-height:9px;
+	padding-left:3px;
+	padding-right:3px;
+	color:#333333;
+}
+.senAdult {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.divBox {
+	position:absolute;
+	top:125px;
+}
+.mmtLeft {
+	float:left;
+	width:726px;
+	height:88px;
+	border:1px solid #000;
+	background:#d5e4fb url(http://media.vcommission.com/brand/files/vcm/406/20140429180640-img01.jpg) no-repeat;
+}
+.lf_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+	z-index:2;
+}
+.lf_mmtDiv{height: 16px; width: 80px; top:15px; left: 0px; z-index:4; display: block;}
+.gT_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+	z-index:2;
+}
+.gT_mmtDiv {height: 16px; width: 80px; top:15px; left: 0px; z-index:4; display: block;}
+.dd_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.dd_mmtDiv {height: 16px; width: 40px; top:15px; left: 0px; z-index:1; display: block;}
+.dd_mmt2 {
+	position:absolute;
+	top:15px;
+	left:42px;
+}
+.rd_mmt {
+	position:absolute;
+	top:15px;
+	left:0px;
+}
+.rd_mmtDiv{height: 16px; width: 40px; top:15px; left: 0px; z-index:1; display: block;}
+.rd_mmt2 {
+	position:absolute;
+	top:15px;
+	left: 42px;
+}
+
+.rtnOne {    left: 155px;    position: absolute;    top: -19px;    width: 200px;}
+.rtnOneIn{width:100px; float:left;}
+.rtnOneIn input{ float:left; margin-right:5px;}
+.ContAllD{width:500px; height:41px;  margin-top:47px; float:left; margin-left:130px;_margin-left:67px; position:relative;}
+.seloriginDv{width:85px; position:relative; float:left;height:30px; }
+.seldestinationDv{width:85px; position:relative; float:left;height:30px; }
+.PasgrsWd{ width:75px;}
+.dtFormat{width:115px;}
+.btnSearchN{ position: absolute;    right: -88px;    top: 10px;}
+</style>
+</head>
+<body>
+<div class="mmtLeft">
+<form  method="post" name="FareSearchForm" style="margin:0px; padding:0px;" id="FareSearchForm">
+<input type="hidden" name="depdate" id="depdate" /><input type="hidden" name="retndate" id="retndate" />
+  <div class="ContAllD">
+    <div class="rtnOne">
+    <div class="rtnOneIn small-txt"><input type="radio" id="returntrip" value="R" name="tt" class="flL radio" onclick="checkTripType();" /> <span>Round Trip</span></div>
+    <div class="rtnOneIn small-txt"><input type="radio" value="O" id="radtripType" name="tt" checked="checked" class="flL radio" onclick="checkTripType();" /> One Way</div>
+    </div>
+    
+    <div class="seloriginDv small-txt">Leaving from:<br />
+    	<div class="divBox lf_mmtDiv" id="divBox" onclick="setSize('selorigin', 9)" >
+    		<img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="80" />
+         </div>
+    <select name="selorigin" class="list-menu lf_mmt" id="selorigin" onchange="resetSize('selorigin', 0)">
+                  <option value="">---------------</option>
+                  <option value='BLR'>Bangalore</option>
+                  <option value='MAA'>Chennai</option>
+                  <option value='DEL'>Delhi</option>
+                  <option value='GOI'>Goa</option>
+                  <option value='HYD'>Hyderabad</option>
+                  <option value='CCU'>Kolkata</option>
+                  <option value='BOM'>Mumbai</option>
+                  <option value='PNQ'>Pune</option>
+				  <option value='BKK'>Bangkok</option>
+				  <option value='DXB'>Dubai</option>
+				  <option value='SIN'>Singapore</option>
+                  <option value="">---------------</option>
+                  <option value='IXA'>Agartala</option>
+                  <option value='AGX'>Agatti Island</option>
+                  <option value='AMD'>Ahmedabad</option>
+                  <option value='AJL'>Aizwal</option>
+                  <option value='IXD'>Allahabad</option>
+                  <option value='ATQ'>Amritsar</option>
+                  <option value='IXU'>Aurangabad</option>
+                  <option value='IXB'>Bagdogra</option>
+                  <option value='BLR'>Bangalore</option>
+                  <option value='IXG'>Belgaum</option>
+                  <option value='BEP'>Bellary</option>
+                  <option value='BHU'>Bhavnagar</option>
+                  <option value='BHO'>Bhopal</option>
+                  <option value='BBI'>Bhubaneshwar</option>
+                  <option value='BHJ'>Bhuj</option>
+                  <option value='CCJ'>Calicut</option>
+                  <option value='IXC'>Chandigarh</option>
+                  <option value='MAA'>Chennai</option>
+                  <option value='COK'>Cochin</option>
+                  <option value='CJB'>Coimbatore</option>
+                  <option value='DED'>Dehradun</option>
+                  <option value='DHM'>Dharamshala</option>
+                  <option value='DIB'>Dibrugarh</option>
+                  <option value='DMU'>Dimapur</option>
+                  <option value='DIU'>Diu</option>
+                  <option value='GAY'>Gaya</option>
+                  <option value='GOI'>Goa</option>
+                  <option value='GOP'>Gorakhpur</option>
+                  <option value='GAU'>Guwahati</option>
+                  <option value='GWL'>Gwalior</option>
+                  <option value='HBX'>Hubli</option>
+                  <option value='HYD'>Hyderabad</option>
+                  <option value='IMF'>Imphal</option>
+                  <option value='IDR'>Indore</option>
+                  <option value='JLR'>Jabalpur</option>
+                  <option value='JAI'>Jaipur</option>
+                  <option value='IXJ'>Jammu</option>
+                  <option value='JGA'>Jamnagar</option>
+                  <option value='JDH'>Jodhpur</option>
+                  <option value='JRH'>Jorhat</option>
+                  <option value='IXY'>Kandla</option>
+                  <option value='HJR'>Khajuraho</option>
+                  <option value='KLH'>Kolhapur</option>
+                  <option value='CCU'>Kolkata</option>
+                  <option value='KUU'>Kullu</option>
+                  <option value='IXL'>Leh</option>
+                  <option value='IXI'>Lilabari</option>
+                  <option value='LKO'>Lucknow</option>
+                  <option value='IXM'>Madurai</option>
+                  <option value='IXE'>Mangalore</option>
+                  <option value='BOM'>Mumbai</option>
+                  <option value='NAG'>Nagpur</option>
+                  <option value='DEL'>New Delhi</option>
+                  <option value='IXP'>Pathankot</option>
+                  <option value='PAT'>Patna</option>
+                  <option value='PBD'>Porbandar</option>
+                  <option value='IXZ'>Port Blair</option>
+                  <option value='PNQ'>Pune</option>
+                  <option value='RPR'>Raipur</option>
+                  <option value='RJA'>Rajahmundry</option>
+                  <option value='RAJ'>Rajkot</option>
+                  <option value='IXR'>Ranchi</option>
+                  <option value='SHL'>Shillong</option>
+                  <option value='SLV'>Shimla</option>
+                  <option value='IXS'>Silchar</option>
+                  <option value='SXR'>Srinagar</option>
+                  <option value='STV'>Surat</option>
+                  <option value='TEZ'>Tezpur</option>
+                  <option value='TRZ'>Tiruchirapally</option>
+                  <option value='TIR'>Tirupati</option>
+                  <option value='TRV'>Trivandrum</option>
+                  <option value='TCR'>Tuticorin</option>
+                  <option value='UDR'>Udaipur</option>
+                  <option value='BDQ'>Vadodara</option>
+                  <option value='VNS'>Varanasi</option>
+                  <option value='VGA'>Vijaywada</option>
+                  <option value='VTZ'>Vishakhapatnam</option>
+				 <option value="">---------------</option>
+				  <option value='AUH'>Abu Dhabi</option>
+				<option value='AHN'>Athens</option>
+				<option value='ATL'>Atlanta</option>
+				<option value='AKL'>Auckland</option>
+				<option value='BAH'>Bahrain</option>
+				<option value='DPS'>Bali</option>
+				<option value='BLA'>Barcelona</option>
+				<option value='BJS'>Beijing</option>
+				<option value='GWW'>Berlin</option>
+				<option value='BOS'>Boston</option>
+				<option value='CRL'>Brussels</option>
+				<option value='CAI'>Cairo</option>
+				<option value='CPT'>Cape Town</option>
+				<option value='CHI'>Chicago</option>
+				<option value='CMB'>Colombo</option>
+				<option value='RKE'>Copenhagen</option>
+				<option value='DFW'>Dallas/Fort Worth</option>
+				<option value='DMM'>Dammam</option>
+				<option value='DOH'>Doha</option>
+				<option value='ZRB'>Frankfurt</option>
+				<option value='GVA'>Geneva</option>
+				<option value='CAN'>Guangzhou</option>
+				<option value='HGH'>Hangzhou</option>
+				<option value='HKG'>Hong Kong</option>
+				<option value='IST'>Istanbul</option>
+				<option value='JED'>Jeddah</option>
+				<option value='JNB'>Johannesburg</option>
+				<option value='KTM'>Kathmandu</option>
+				<option value='USM'>Koh Samui</option>
+				<option value='CCJ'>Kozhikode</option>
+				<option value='KUL'>Kuala Lumpur</option>
+				<option value='KWI'>Kuwait</option>
+				<option value='LAS'>Las Vegas</option>
+				<option value='LON'>London </option>
+				<option value='LAX'>Los Angeles</option>
+				<option value='TOJ'>Madrid</option>
+				<option value='MLE'>Male</option>
+				<option value='MHT'>Manchester</option>
+				<option value='MNL'>Manila</option>
+				<option value='MRU'>Mauritius</option>
+				<option value='BGY'>Milan</option>
+				<option value='ZMU'>Munich</option>
+				<option value='NBO'>Nairobi</option>
+				<option value='NYC'>New York</option>
+				<option value='EWR'>Newark</option>
+				<option value='LBG'>Paris</option>
+				<option value='PER'>Perth</option>
+				<option value='HKT'>Phuket</option>
+				<option value='XYG'>Prague</option>
+				<option value='RUH'>Riyadh</option>
+				<option value='RME'>Rome</option>
+				<option value='SFO'>San Francisco</option>
+				<option value='SEL'>Seoul</option>
+				<option value='SHA'>Shanghai</option>
+				<option value='SHJ'>Sharjah</option>
+				<option value='YQY'>Sydney</option>
+				<option value='TYO'>Tokyo</option>
+				<option value='TYO'>Tokyo</option>
+				<option value='YTO'>Toronto</option>
+				<option value='YVR'>Vancouver</option>
+				<option value='VIE'>Vienna</option>
+				<option value='WAS'>Washington</option>
+				<option value='ZRH'>Zurich</option>
+                </select>   </div>
+                <div class="seldestinationDv small-txt">Going to:<br /><div class="divBox gT_mmtDiv" id="divBox2" onclick="setSize('seldestination', 9)" ><img src="http://media.vcommission.com/brand/files/vcm/406/20140429180642-mmt_spacer.gif" height="20" width="80" /></div>
+              <select name="seldestination" class="list-menu gT_mmt" id="seldestination" tabindex="4" onchange="resetSize('seldestination', 0)">
+                <option value="">---------------</option>
+                <option value='BLR'>Bangalore</option>
+                <option value='MAA'>Chennai</option>
+                <option value='DEL'>Delhi</option>
+                <option value='GOI'>Goa</option>
+                <option value='HYD'>Hyderabad</option>
+                <option value='CCU'>Kolkata</option>
+                <option value='BOM'>Mumbai</option>
+                <option value='PNQ'>Pune</option>
+				
+                <option value="">---------------</option>
+                <option value='IXA'>Agartala</option>
+                <option value='AGX'>Agatti Island</option>
+                <option value='AMD'>Ahmedabad</option>
+                <option value='AJL'>Aizwal</option>
+                <option value='IXD'>Allahabad</option>
+                <option value='ATQ'>Amritsar</option>
+                <option value='IXU'>Aurangabad</option>
+                <option value='IXB'>Bagdogra</option>
+                <option value='BLR'>Bangalore</option>
+                <option value='IXG'>Belgaum</option>
+                <option value='BEP'>Bellary</option>
+                <option value='BHU'>Bhavnagar</option>
+                <option value='BHO'>Bhopal</option>
+                <option value='BBI'>Bhubaneshwar</option>
+                <option value='BHJ'>Bhuj</option>
+                <option value='CCJ'>Calicut</option>
+                <option value='IXC'>Chandigarh</option>
+                <option value='MAA'>Chennai</option>
+                <option value='COK'>Cochin</option>
+                <option value='CJB'>Coimbatore</option>
+                <option value='DED'>Dehradun</option>
+                <option value='DHM'>Dharamshala</option>
+                <option value='DIB'>Dibrugarh</option>
+                <option value='DMU'>Dimapur</option>
+                <opti

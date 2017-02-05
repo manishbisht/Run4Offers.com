@@ -1,0 +1,86 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	margin-top:50px;
+	}
+li{
+  text-align:left;
+}
+@font-face {
+    font-family: logo;
+    src:url(../fonts/RemachineScript.ttf);
+}
+@font-face {
+    font-family: coming;
+    src:url(../fonts/Deadly%20Inked.ttf);
+}
+.navbar-wrapper {
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+  position:relative;
+  border-radius:0px;
+}
+.navbar-fixed-top{
+	position:fixed;
+	right:0;
+	left:0;
+	z-index:20;
+	}
+.navbar-default{
+	background-color:#f8f8f8;
+	margin-bottom:0px;
+	}
+.navbar-wrapper > .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+  width: auto;
+}
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  background-color: #f5f5f5;
+}
+.container {
+  width: auto;
+  max-width: 1100px;
+  padding: 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+.col-md-7{
+  text-align:left;
+}
+.user{
+	display:inline
+	}
+.navpad{
+	padding-left:10px;
+	}
+@media (min-width: 768px) {
+  .navbar-wrapper {
+	position:relative;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  
+}

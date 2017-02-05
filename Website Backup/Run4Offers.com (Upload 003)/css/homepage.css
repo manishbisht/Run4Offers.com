@@ -1,0 +1,62 @@
+@charset "utf-8";
+/* CSS Document */
+.row{
+	margin-right:0;
+	margin-left:0;
+	margin-top:20px;
+	}
+.offers{
+	margin-top:25px;
+	}
+.desktop{
+	display:none;
+	}
+.tablet{
+	display:none;
+	}
+.carousel-control.left, .carousel-control.right{
+	background-image:none !important;
+	} 
+.partnerhead{
+	font-family: "Century Gothic", Arial, 'PT Sans', Ubuntu, Helvetica, sans-serif;
+	font-size:35px;
+	}
+.box{
+	box-shadow: 0px 1px 5px #999999;
+	padding-top:10px;
+	padding-bottom:1px;
+	margin-bottom:10px;
+	border-radius:10px;
+	}
+@media (min-width: 768px) {
+	.mobile{
+		display:none;
+		}
+	.desktop{
+		display:block;
+		}
+	.tablet{
+		display:none;
+		}
+	.top{
+	    margin-top:55px;
+	}
+	.partnerhead{
+	   font-size:40px;
+	}
+	.a{
+		padding:0;
+	}
+	.box{
+		margin-left:10px;
+	}
+}
+
+@media (min-width: 992px) {
+	.tablet{
+		display:block;
+		}
+	.partnerhead{
+	   font-size:45px;
+	}
+}

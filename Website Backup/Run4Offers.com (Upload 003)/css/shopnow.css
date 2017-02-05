@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* CSS Document */
+.row{
+	margin-right:0;
+	margin-left:0px;;
+	margin-top:60px;
+	}
+.offers{
+	margin-top:10px;
+	}
+.textfield{
+	margin-top:16px;
+	}
+.links{
+	margin-top:10px;
+	min-width:200px;
+	}
+.note{
+	margin-top:10px;
+	margin-right:15px;
+	margin-left:15px;
+	margin-bottom:10px;
+	}
+.linkbuttons{
+	margin-bottom:5px;
+	text-decoration:none;
+	}
+.col-xs-12{
+	margin-left:0px;
+	margin-right:0;}
+.search{
+	padding-right:0;
+	padding-left:0;}
+.userlink:hover{
+	text-decoration:none;
+	}
+@media (min-width: 768px) {
+
+}
+@media (min-width: 992px) {
+    .note{
+	margin-right:auto;
+	margin-left:auto;
+	}
+}
+

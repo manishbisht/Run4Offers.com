@@ -1,0 +1,4 @@
+AffiliateOrderItemId,Title,ProductId,Category,Quantity,Sales,Price(Per Unit),CommissionRate,TentativeCommission,Status,OrderDate,SalesChannel,CustomerType,AffExtParam1,AffExtParam2
+25120133,SanDisk 16 GB MicroSDHC Class 10,ACCEA5E3GPBQJ9P9,Mobile Accessories,1,368,411,6,22.08,processed,Mon Sep 07 16:30:22 IST 2015,APP,NEW,8559874393,
+25120134,Sandisk Cruzer Blade USB Utility Pendrive 8 GB,ACCCWPAJDRFYMWAG,Pen Drives,1,193,227,2,3.86,processed,Mon Sep 07 16:30:22 IST 2015,APP,NEW,8559874393,
+25299615,Vans Old Skool Sneakers,SHOE9WGF5T2CTFFR,Men Footwear,1,1743,1743,10,174.3,processed,Sat Sep 12 02:04:22 IST 2015,WEBSITE,NEW,8955598106,

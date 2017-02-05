@@ -1,0 +1,23 @@
+﻿Earnings Report 1 October 2015 to 31 October 2015
+
+
+
+Product Line	Item Name	                                                                        			ASIN		Seller		Tracking ID	Date Dispatched		Price (INR )	Advertising-Fee Rate	Items Dispatched	Revenue (INR )	Earnings (INR )	Device Type
+
+Books	        Learn to Play the Piano and Keyboard										1407539787	Third Party	shoppinghub-21	October 17, 2015	251.00		10.00%                	1			251.00		25.10		Mobile
+
+Electronics	SanDisk Ultra 16GB USB 3.0 OTG Flash Drive with micro USB connector For Android Mobile Devices- SDDD2-016G-G46	B00RBGYG74	Third Party	shoppinghub-21	October 16, 2015	459.00		4.00%                	1			459.00		18.36		Mobile
+
+Other	        Lotus Herbals WhiteGlow Yogurt Skin Whitening and Brightening Masque, 80g					B00791FFD0	Third Party	shoppinghub-21	October 15, 2015	130.00		10.00%                	1			130.00		13.00		Mobile
+
+Other	        Lotus Herbals WhiteGlow Oatmeal and Yogurt Skin Whitening Scrub, 100g						B00791FF2Q	Third Party	shoppinghub-21	October 14, 2015	146.00		10.00%                	1			146.00		14.60		Mobile
+
+Other	        Lotus Herbals White Glow Skin Whitening And Brightening Hand and Body Lotion SPF-25, 300ml			B007E9F86Q	Third Party	shoppinghub-21	October 15, 2015	196.44		10.00%                	1			196.44		19.64		Mobile
+
+Other		Lotus Herbals Whiteglow Skin Whitening and Brightening Massage Crème, 60g					B00EU4Z2QE	Third Party	shoppinghub-21	October 15, 2015	284.44		10.00%                	1			284.44		28.44		Mobile
+
+Other		Lotus Herbals WhiteGlow Intensive Skin Whitening Serum+ Moisturiser, 30ml					B00791FKE4	Third Party	shoppinghub-21	October 14, 2015	338.00		10.00%                	1			338.00		33.80		Mobile
+
+Other		Lotus Herbals White Glow Day and Night Pack									B00JMAAKTU	Third Party	shoppinghub-21	October 14, 2015	540.00		10.00%                	1			540.00		54.00		Mobile
+
+Watches		Maxima Attivo Steel Analog Black Dial Men's Watch - 24232LMGI							B008OVU96M	Third Party	shoppinghub-21	October 14, 2015	711.60		10.00%                	1			711.60		71.16		Desktop
